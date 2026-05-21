@@ -1,0 +1,923 @@
+# KALKULATOR AKTUARIA & MATEMATIKA KEUANGAN
+
+import os
+from colorama import Fore, Style, init
+import math
+from datetime import datetime
+
+init(autoreset=True)
+
+os.system("cls")
+# =====================================================
+# FORMAT RUPIAH
+# =====================================================
+
+
+def rupiah(angka):
+    return f"Rp{angka:,.2f}".replace(",", ".")
+
+
+# =====================================================
+# BUNGA SEDERHANA
+# =====================================================
+
+
+def bunga_sederhana(P, i, t):
+
+    bunga = P * i * t
+    total = P + bunga
+
+    print("\n===== BUNGA SEDERHANA =====")
+
+    print(f"Pokok            = {rupiah(P)}")
+    print(f"Bunga            = {i*100:.2f}%")
+    print(f"Waktu            = {t} tahun")
+    print(f"Bunga diperoleh  = {rupiah(bunga)}")
+    print(f"Jumlah akhir     = {rupiah(total)}")
+
+
+# =====================================================
+# BUNGA MAJEMUK
+# =====================================================
+
+
+def bunga_majemuk(P, i, n):
+
+    total = P * (1 + i) ** n
+
+    print("\n===== BUNGA MAJEMUK =====")
+
+    print(f"Pokok            = {rupiah(P)}")
+    print(f"Bunga            = {i*100:.2f}%")
+    print(f"Periode          = {n}")
+    print(f"Jumlah akhir     = {rupiah(total)}")
+
+
+# =====================================================
+# COMPOUND m-KALI SETAHUN
+# =====================================================
+
+
+def compound_m(P, nominal, m, t):
+
+    total = P * (1 + nominal / m) ** (m * t)
+
+    print("\n===== COMPOUND m-KALI SETAHUN =====")
+
+    print(f"Pokok                = {rupiah(P)}")
+    print(f"Bunga nominal        = {nominal*100:.2f}%")
+    print(f"Frekuensi m          = {m}")
+    print(f"Waktu                = {t} tahun")
+    print(f"Jumlah akhir         = {rupiah(total)}")
+
+
+# =====================================================
+# BUNGA EFEKTIF
+# =====================================================
+
+
+def bunga_efektif(nominal, m):
+
+    efektif = (1 + nominal / m) ** m - 1
+
+    print("\n===== BUNGA EFEKTIF =====")
+
+    print(f"Bunga nominal        = {nominal*100:.2f}%")
+    print(f"Frekuensi            = {m}")
+    print(f"Bunga efektif        = {efektif*100:.4f}%")
+
+
+# =====================================================
+# PRESENT VALUE
+# =====================================================
+
+
+def present_value(FV, i, n):
+
+    PV = FV / (1 + i) ** n
+
+    print("\n===== PRESENT VALUE =====")
+
+    print(f"Future Value         = {rupiah(FV)}")
+    print(f"Bunga                = {i*100:.2f}%")
+    print(f"Periode              = {n}")
+    print(f"Present Value        = {rupiah(PV)}")
+
+
+# =====================================================
+# FUTURE VALUE
+# =====================================================
+
+
+def future_value(PV, i, n):
+
+    FV = PV * (1 + i) ** n
+
+    print("\n===== FUTURE VALUE =====")
+
+    print(f"Present Value        = {rupiah(PV)}")
+    print(f"Bunga                = {i*100:.2f}%")
+    print(f"Periode              = {n}")
+    print(f"Future Value         = {rupiah(FV)}")
+
+
+# =====================================================
+# DISKONTO SEDERHANA
+# =====================================================
+
+
+def diskonto_sederhana(FV, d, t):
+
+    PV = FV * (1 - d * t)
+
+    print("\n===== DISKONTO SEDERHANA =====")
+
+    print(f"Future Value         = {rupiah(FV)}")
+    print(f"Diskonto             = {d*100:.2f}%")
+    print(f"Waktu                = {t}")
+    print(f"Present Value        = {rupiah(PV)}")
+
+
+# =====================================================
+# DISKONTO MAJEMUK
+# =====================================================
+
+
+def diskonto_majemuk(FV, d, n):
+
+    PV = FV * (1 - d) ** n
+
+    print("\n===== DISKONTO MAJEMUK =====")
+
+    print(f"Future Value         = {rupiah(FV)}")
+    print(f"Diskonto             = {d*100:.2f}%")
+    print(f"Periode              = {n}")
+    print(f"Present Value        = {rupiah(PV)}")
+
+
+# =====================================================
+# FORCE OF INTEREST
+# =====================================================
+
+
+def force_interest(P, delta, t):
+
+    total = P * math.exp(delta * t)
+
+    print("\n===== FORCE OF INTEREST =====")
+
+    print(f"Pokok                = {rupiah(P)}")
+    print(f"Delta                = {delta*100:.2f}%")
+    print(f"Waktu                = {t}")
+    print(f"Jumlah akhir         = {rupiah(total)}")
+
+
+# =====================================================
+# KONVERSI i, d, v
+# =====================================================
+
+
+def konversi_bunga(i=None, d=None, v=None):
+
+    print("\n===== KONVERSI BUNGA =====")
+
+    if i is not None:
+
+        d = i / (1 + i)
+        v = 1 / (1 + i)
+
+        print(f"i = {i*100:.2f}%")
+        print(f"d = {d*100:.2f}%")
+        print(f"v = {v:.4f}")
+
+    elif d is not None:
+
+        i = d / (1 - d)
+        v = 1 - d
+
+        print(f"d = {d*100:.2f}%")
+        print(f"i = {i*100:.2f}%")
+        print(f"v = {v:.4f}")
+
+    elif v is not None:
+
+        i = (1 / v) - 1
+        d = 1 - v
+
+        print(f"v = {v:.4f}")
+        print(f"i = {i*100:.2f}%")
+        print(f"d = {d*100:.2f}%")
+
+
+# =====================================================
+# PERSAMAAN NILAI
+# =====================================================
+
+
+def equation_of_value(cashflows, i, focal):
+
+    total = 0
+
+    print("\n===== PERSAMAAN NILAI =====")
+
+    for nilai, waktu in cashflows:
+
+        nilai_fokus = nilai * (1 + i) ** (focal - waktu)
+
+        total += nilai_fokus
+
+        print(
+            f"Cashflow {rupiah(nilai)} pada t={waktu} -> {rupiah(nilai_fokus)}"
+        )
+
+    print(f"\nTotal pada tanggal fokus t={focal} = {rupiah(total)}")
+
+
+# =====================================================
+# NPV
+# =====================================================
+
+
+def npv(cashflows, i):
+
+    total = 0
+
+    print("\n===== NET PRESENT VALUE =====")
+
+    for nilai, t in cashflows:
+
+        pv = nilai / (1 + i) ** t
+
+        total += pv
+
+        print(
+            f"Cashflow {rupiah(nilai)} di t={t} -> PV = {rupiah(pv)}"
+        )
+
+    print(f"\nNPV = {rupiah(total)}")
+
+    if total > 0:
+        print("Keputusan: INVESTASI MENGUNTUNGKAN")
+    else:
+        print("Keputusan: INVESTASI TIDAK MENGUNTUNGKAN")
+
+
+# =====================================================
+# ANUITAS
+# =====================================================
+
+
+def annuity_immediate_pv(R, i, n):
+
+    PV = R * ((1 - (1 + i) ** (-n)) / i)
+
+    print("\n===== ANUITAS IMMEDIATE PV =====")
+    print(f"Nilai sekarang = {rupiah(PV)}")
+
+
+
+def annuity_immediate_fv(R, i, n):
+
+    FV = R * (((1 + i) ** n - 1) / i)
+
+    print("\n===== ANUITAS IMMEDIATE FV =====")
+    print(f"Nilai akumulasi = {rupiah(FV)}")
+
+
+
+def annuity_due_pv(R, i, n):
+
+    PV = R * ((1 - (1 + i) ** (-n)) / i) * (1 + i)
+
+    print("\n===== ANUITAS DUE PV =====")
+    print(f"Nilai sekarang = {rupiah(PV)}")
+
+
+
+def annuity_due_fv(R, i, n):
+
+    FV = R * ((((1 + i) ** n) - 1) / i) * (1 + i)
+
+    print("\n===== ANUITAS DUE FV =====")
+    print(f"Nilai akumulasi = {rupiah(FV)}")
+
+
+# =====================================================
+# AMORTISASI
+# =====================================================
+
+
+def amortisasi(pinjaman, i, n):
+
+    a = (1 - (1 + i) ** (-n)) / i
+    angsuran = pinjaman / a
+
+    saldo = pinjaman
+
+    print("\n===== TABEL AMORTISASI =====")
+
+    print(
+        f"{'Periode':<10}{'Angsuran':<20}{'Bunga':<20}{'Pokok':<20}{'Sisa':<20}"
+    )
+
+    for periode in range(1, n + 1):
+
+        bunga = saldo * i
+        pokok = angsuran - bunga
+        saldo -= pokok
+
+        if saldo < 1:
+            saldo = 0
+
+        print(
+            f"{periode:<10}{rupiah(angsuran):<20}{rupiah(bunga):<20}{rupiah(pokok):<20}{rupiah(saldo):<20}"
+        )
+
+
+# =====================================================
+# CARI JUMLAH PERIODE
+# =====================================================
+
+
+def cari_periode(PV, R, i):
+
+    nilai = 1 - (PV * i / R)
+
+    n = -math.log(nilai) / math.log(1 + i)
+
+    print("\n===== JUMLAH PERIODE =====")
+
+    print(f"Jumlah periode = {n:.2f}")
+
+
+# =====================================================
+# IRR
+# =====================================================
+
+
+def irr_sederhana(cashflows):
+
+    print("\n===== IRR =====")
+
+    best_i = None
+    best_npv = float("inf")
+
+    for persen in range(1, 101):
+
+        i = persen / 100
+
+        total = 0
+
+        for nilai, t in cashflows:
+            total += nilai / ((1 + i) ** t)
+
+        if abs(total) < best_npv:
+            best_npv = abs(total)
+            best_i = i
+
+    print(f"IRR kira-kira = {best_i*100:.2f}%")
+
+
+# =====================================================
+# HITUNG HARI
+# =====================================================
+
+
+def hitung_hari(tgl_awal, tgl_akhir):
+
+    format_tanggal = "%d-%m-%Y"
+
+    awal = datetime.strptime(tgl_awal, format_tanggal)
+    akhir = datetime.strptime(tgl_akhir, format_tanggal)
+
+    selisih = (akhir - awal).days
+
+    print("\n===== PERHITUNGAN HARI =====")
+
+    print(f"Jumlah hari = {selisih} hari")
+
+
+# =====================================================
+# PENJELASAN PROGRAM
+# =====================================================
+
+print(Fore.CYAN + "=" * 70)
+print(Fore.YELLOW + "        💰 SELAMAT DATANG DI KALKULATOR AKTUARIA 💰")
+print(Fore.CYAN + "=" * 70)
+
+print(Fore.GREEN + """
+📘 Program ini digunakan untuk membantu perhitungan
+📈 Matematika Keuangan dan Aktuaria.
+💵 Cocok untuk investasi, bunga, anuitas, dan lainnya.
+""")
+
+print(Fore.RED + """
+================ PENJELASAN MENU ================
+      """)
+      
+print(Fore.MAGENTA + """
+ 
+1. BUNGA SEDERHANA
+------------------------------------------------------------ 
+    """)
+print("""
+📘 Digunakan untuk menghitung bunga linear, yaitu bunga
+yang hanya dihitung dari modal awal.
+
+🧮 Rumus:
+A = P(1 + it)
+
+📥 Input:
+• 💰 Pokok/modal awal
+• 📈 Tingkat bunga
+• ⏳ Waktu investasi
+
+💡 Contoh penggunaan:
+🏦 Tabungan dengan bunga tetap setiap tahun.
+""")
+print(Fore.MAGENTA + """============================================================""")
+print(Fore.MAGENTA + """
+2. BUNGA MAJEMUK
+------------------------------------------------------------ 
+    """)
+print("""
+Digunakan untuk menghitung bunga berbunga, yaitu bunga
+yang terus bertambah karena bunga sebelumnya ikut
+menghasilkan bunga.
+
+Rumus:
+A = P(1+i)^n
+
+Input:
+- Pokok/modal awal
+- Tingkat bunga
+- Jumlah periode
+
+Contoh penggunaan:
+Deposito dan investasi jangka panjang.
+""")
+
+print(Fore.MAGENTA + """============================================================""")
+print(Fore.MAGENTA + """
+3. COMPOUND m-KALI SETAHUN
+------------------------------------------------------------     """)
+print("""
+Digunakan untuk menghitung bunga majemuk yang
+dikompaun beberapa kali dalam setahun.
+
+Contoh:
+- Bulanan
+- Harian
+- Semesteran
+
+Rumus:
+A = P(1 + i/m)^(mt)
+
+Input:
+- Pokok/modal awal
+- Bunga nominal
+- Frekuensi m
+- Waktu
+
+Keterangan:
+m = jumlah compounding per tahun.
+""")
+print(Fore.MAGENTA + """============================================================""")
+print(Fore.MAGENTA + """
+4. BUNGA EFEKTIF
+------------------------------------------------------------""")
+print("""
+Digunakan untuk mengubah bunga nominal menjadi
+bunga efektif tahunan.
+
+Rumus:
+i_efektif = (1 + i/m)^m - 1
+
+Input:
+- Bunga nominal
+- Frekuensi compounding
+
+Contoh:
+Bunga 12% compounded monthly.
+""")
+print(Fore.MAGENTA + """============================================================""")
+print(Fore.MAGENTA + """
+5. NILAI WAKTU UANG
+------------------------------------------------------------""")
+print("""
+Digunakan untuk menghitung:
+
+1. Present Value (PV)
+   -> Nilai uang saat ini.
+
+2. Future Value (FV)
+   -> Nilai uang di masa depan.
+
+Konsep utama:
+Time Value of Money.
+""")
+print(Fore.MAGENTA + """============================================================""")
+print(Fore.MAGENTA + """
+6. FORCE OF INTEREST
+------------------------------------------------------------""")
+print("""
+Digunakan untuk menghitung bunga kontinu
+(continuous compounding).
+
+Rumus:
+A = Pe^(delta*t)
+
+Input:
+- Pokok/modal awal
+- Delta
+- Waktu
+
+Biasanya digunakan dalam teori aktuaria lanjut.
+""")
+print(Fore.MAGENTA + """============================================================""")
+print(Fore.MAGENTA + """
+7. DISKONTO
+------------------------------------------------------------""")
+print("""
+Digunakan untuk menghitung nilai sekarang
+menggunakan metode diskonto.
+
+Terdapat:
+1. Diskonto sederhana
+2. Diskonto majemuk
+
+Input:
+- Future value
+- Tingkat diskonto
+- Waktu/periode
+""")
+print(Fore.MAGENTA + """============================================================""")
+print(Fore.MAGENTA + """
+8. KONVERSI i, d, v
+------------------------------------------------------------""")
+print("""
+Digunakan untuk konversi:
+
+i = bunga efektif
+d = diskonto efektif
+v = faktor diskonto
+
+Menu ini membantu memahami hubungan antar
+konsep bunga dan diskonto.
+""")
+print(Fore.MAGENTA + """============================================================""")
+print(Fore.MAGENTA + """
+9. PERSAMAAN NILAI
+------------------------------------------------------------""")
+print("""
+Digunakan untuk memindahkan seluruh cashflow
+ke satu titik waktu tertentu (tanggal fokus).
+
+Input:
+- Cashflow
+- Waktu cashflow
+- Tingkat bunga
+- Tanggal fokus
+
+Digunakan dalam:
+- Analisis investasi
+- Penggantian utang
+- Evaluasi pembayaran
+""")
+print(Fore.MAGENTA + """============================================================""")
+print(Fore.MAGENTA + """
+10. NPV (NET PRESENT VALUE)
+------------------------------------------------------------""")
+print("""
+Digunakan untuk menghitung kelayakan investasi.
+
+Konsep:
+Semua cashflow didiskontokan ke waktu sekarang.
+
+Interpretasi:
+- NPV > 0  -> investasi menguntungkan
+- NPV < 0  -> investasi merugikan
+""")
+print(Fore.MAGENTA + """============================================================""")
+print(Fore.MAGENTA + """
+11. ANUITAS
+------------------------------------------------------------""")
+print("""
+Digunakan untuk menghitung pembayaran berkala
+dengan jumlah tetap.
+
+Submenu:
+1. Immediate PV
+2. Immediate FV
+3. Due PV
+4. Due FV
+
+Digunakan pada:
+- Cicilan
+- Dana pensiun
+- Asuransi
+- Tabungan berkala
+""")
+print(Fore.MAGENTA + """============================================================""")
+print(Fore.MAGENTA + """
+12. TABEL AMORTISASI
+------------------------------------------------------------""")
+print("""
+Digunakan untuk membuat tabel pelunasan pinjaman.
+
+Output:
+- Angsuran
+- Bunga
+- Pokok
+- Sisa utang
+
+Contoh:
+Kredit rumah dan kendaraan.
+""")
+print(Fore.MAGENTA + """============================================================""")
+print(Fore.MAGENTA + """
+13. CARI JUMLAH PERIODE
+------------------------------------------------------------""")
+print("""
+Digunakan untuk menentukan lama pelunasan
+pinjaman atau investasi.
+
+Input:
+- Pinjaman
+- Anuitas
+- Tingkat bunga
+
+Output:
+- Jumlah periode pembayaran.
+""")
+print(Fore.MAGENTA + """============================================================""")
+print(Fore.MAGENTA + """
+14. IRR (INTERNAL RATE OF RETURN)
+------------------------------------------------------------""")
+print("""
+Digunakan untuk mencari tingkat keuntungan
+suatu investasi.
+
+Interpretasi:
+Semakin besar IRR, semakin baik investasi.
+""")
+print(Fore.MAGENTA + """============================================================""")
+print(Fore.MAGENTA + """
+15. HITUNG JUMLAH HARI
+------------------------------------------------------------""")
+print("""
+Digunakan untuk menghitung selisih hari
+antara dua tanggal.
+
+Format tanggal:
+dd-mm-yyyy
+
+Contoh:
+01-01-2025
+""")
+print(Fore.MAGENTA + """============================================================""")
+
+input("Tekan ENTER untuk masuk ke program...")
+
+
+# =====================================================
+# MENU INTERAKTIF
+# =====================================================
+
+while True:
+
+    print("\n" + "=" * 60)
+    print("      KALKULATOR AKTUARIA & MATEMATIKA KEUANGAN")
+    print("=" * 60)
+
+    print("\nPILIH MENU:")
+    print("1. Bunga Sederhana")
+    print("2. Bunga Majemuk")
+    print("3. Compound m-kali Setahun")
+    print("4. Bunga Efektif")
+    print("5. Nilai Waktu Uang")
+    print("6. Force of Interest")
+    print("7. Diskonto")
+    print("8. Konversi i, d, v")
+    print("9. Persamaan Nilai")
+    print("10. NPV")
+    print("11. Anuitas")
+    print("12. Tabel Amortisasi")
+    print("13. Cari Jumlah Periode")
+    print("14. IRR")
+    print("15. Hitung Jumlah Hari")
+    print("0. Keluar")
+
+    pilihan = input("\nMasukkan pilihan: ")
+
+    if pilihan == "1":
+
+        P = float(input("Masukkan pokok/modal awal : "))
+        i = float(input("Masukkan bunga (%)        : ")) / 100
+        t = float(input("Masukkan waktu (tahun)    : "))
+
+        bunga_sederhana(P, i, t)
+
+    elif pilihan == "2":
+
+        P = float(input("Masukkan pokok/modal awal : "))
+        i = float(input("Masukkan bunga (%)        : ")) / 100
+        n = float(input("Masukkan jumlah periode   : "))
+
+        bunga_majemuk(P, i, n)
+
+    elif pilihan == "3":
+
+        P = float(input("Masukkan pokok/modal awal : "))
+        nominal = float(input("Masukkan bunga nominal (%) : ")) / 100
+        m = int(input("Masukkan frekuensi m       : "))
+        t = float(input("Masukkan waktu (tahun)     : "))
+
+        compound_m(P, nominal, m, t)
+
+    elif pilihan == "4":
+
+        nominal = float(input("Masukkan bunga nominal (%) : ")) / 100
+        m = int(input("Masukkan frekuensi m       : "))
+
+        bunga_efektif(nominal, m)
+
+    elif pilihan == "5":
+
+        print("\n1. Present Value")
+        print("2. Future Value")
+
+        sub = input("Pilih submenu : ")
+
+        if sub == "1":
+
+            FV = float(input("Masukkan Future Value : "))
+            i = float(input("Masukkan bunga (%)    : ")) / 100
+            n = float(input("Masukkan periode      : "))
+
+            present_value(FV, i, n)
+
+        elif sub == "2":
+
+            PV = float(input("Masukkan Present Value : "))
+            i = float(input("Masukkan bunga (%)     : ")) / 100
+            n = float(input("Masukkan periode       : "))
+
+            future_value(PV, i, n)
+
+    elif pilihan == "6":
+
+        P = float(input("Masukkan pokok/modal awal : "))
+        delta = float(input("Masukkan delta (%)        : ")) / 100
+        t = float(input("Masukkan waktu            : "))
+
+        force_interest(P, delta, t)
+
+    elif pilihan == "7":
+
+        print("\n1. Diskonto Sederhana")
+        print("2. Diskonto Majemuk")
+
+        sub = input("Pilih submenu : ")
+
+        if sub == "1":
+
+            FV = float(input("Masukkan Future Value : "))
+            d = float(input("Masukkan diskonto (%) : ")) / 100
+            t = float(input("Masukkan waktu        : "))
+
+            diskonto_sederhana(FV, d, t)
+
+        elif sub == "2":
+
+            FV = float(input("Masukkan Future Value : "))
+            d = float(input("Masukkan diskonto (%) : ")) / 100
+            n = float(input("Masukkan periode      : "))
+
+            diskonto_majemuk(FV, d, n)
+
+    elif pilihan == "8":
+
+        print("\n1. Input i")
+        print("2. Input d")
+        print("3. Input v")
+
+        jenis = input("Masukkan pilihan : ")
+
+        if jenis == "1":
+            i = float(input("Masukkan i (%) : ")) / 100
+            konversi_bunga(i=i)
+
+        elif jenis == "2":
+            d = float(input("Masukkan d (%) : ")) / 100
+            konversi_bunga(d=d)
+
+        elif jenis == "3":
+            v = float(input("Masukkan v : "))
+            konversi_bunga(v=v)
+
+    elif pilihan == "9":
+
+        banyak = int(input("Jumlah cashflow : "))
+
+        cashflows = []
+
+        for k in range(banyak):
+
+            nilai = float(input(f"Cashflow ke-{k+1} : "))
+            waktu = float(input(f"Waktu ke-{k+1}    : "))
+
+            cashflows.append((nilai, waktu))
+
+        i = float(input("Masukkan bunga (%) : ")) / 100
+        focal = float(input("Tanggal fokus      : "))
+
+        equation_of_value(cashflows, i, focal)
+
+    elif pilihan == "10":
+
+        banyak = int(input("Jumlah cashflow : "))
+
+        cashflows = []
+
+        for k in range(banyak):
+
+            nilai = float(input(f"Cashflow ke-{k+1} : "))
+            waktu = float(input(f"Waktu ke-{k+1}    : "))
+
+            cashflows.append((nilai, waktu))
+
+        i = float(input("Masukkan bunga (%) : ")) / 100
+
+        npv(cashflows, i)
+
+    elif pilihan == "11":
+
+        print("\n1. Immediate PV")
+        print("2. Immediate FV")
+        print("3. Due PV")
+        print("4. Due FV")
+
+        sub = input("Pilih submenu : ")
+
+        R = float(input("Masukkan pembayaran : "))
+        i = float(input("Masukkan bunga (%)  : ")) / 100
+        n = int(input("Masukkan periode    : "))
+
+        if sub == "1":
+            annuity_immediate_pv(R, i, n)
+
+        elif sub == "2":
+            annuity_immediate_fv(R, i, n)
+
+        elif sub == "3":
+            annuity_due_pv(R, i, n)
+
+        elif sub == "4":
+            annuity_due_fv(R, i, n)
+
+    elif pilihan == "12":
+
+        pinjaman = float(input("Masukkan jumlah pinjaman : "))
+        i = float(input("Masukkan bunga (%)       : ")) / 100
+        n = int(input("Masukkan periode         : "))
+
+        amortisasi(pinjaman, i, n)
+
+    elif pilihan == "13":
+
+        PV = float(input("Masukkan pinjaman : "))
+        R = float(input("Masukkan anuitas  : "))
+        i = float(input("Masukkan bunga (%) : ")) / 100
+
+        cari_periode(PV, R, i)
+
+    elif pilihan == "14":
+
+        banyak = int(input("Jumlah cashflow : "))
+
+        cashflows = []
+
+        for k in range(banyak):
+            nilai = float(input(f"Cashflow ke-{k+1} : "))
+            waktu = float(input(f"Waktu ke-{k+1}    : "))
+            cashflows.append((nilai, waktu))
+
+        irr_sederhana(cashflows)
+
+    elif pilihan == "15":
+
+        awal = input("Masukkan tanggal awal (dd-mm-yyyy) : ")
+        akhir = input("Masukkan tanggal akhir (dd-mm-yyyy): ")
+
+        hitung_hari(awal, akhir)
+
+    elif pilihan == "0":
+
+        print("\nTerima kasih telah menggunakan program ini!")
+
+        break
+
+    else:
+
+        print("\nPilihan tidak valid!")
