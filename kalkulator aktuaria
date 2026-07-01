@@ -1,0 +1,490 @@
+import streamlit as st
+import math
+import pandas as pd
+import matplotlib.pyplot as plt
+
+st.set_page_config(
+    page_title="Actuaria Financial System",
+    page_icon="📈",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+# =========================================
+# CUSTOM CSS
+# =========================================
+
+st.markdown("""
+<style>
+
+/* IMPORT FONT */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* Semua font */
+html, body, [class*="css"]  {
+
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Background utama */
+.stApp {
+
+    background: linear-gradient(
+        to right,
+        #f5f3ff,
+        #ede9fe
+    );
+
+    color: #3b0764;
+}
+            
+/* Sidebar */
+section[data-testid="stSidebar"] {
+
+    background: linear-gradient(
+        to bottom,
+        #c4b5fd,
+        #a78bfa
+    );
+}
+
+/* Judul */
+h1 {
+
+    color:  #f8f5ff;
+
+    text-align: center;
+
+    font-size: 55px;
+    text-shadow: 0 0 15px #c084fc;
+    font-weight: 700;
+}
+
+/* Subjudul */
+h2, h3 {
+
+    color: #7c3aed;
+
+    font-weight: 600;
+}
+
+/* Text biasa */
+p, label {
+
+    color: #4c1d95;
+
+    font-size: 17px;
+}
+
+/* Tombol */
+.stButton>button {
+
+    background: linear-gradient(
+        to right,
+        #8b5cf6,
+        #7c3aed
+    );
+
+    color: white;
+
+    border-radius: 20px;
+
+    height: 55px;
+
+    width: 100%;
+
+    font-size: 20px;
+
+    font-weight: bold;
+
+    border: none;
+
+    transition: 0.3s;
+}
+
+/* Hover tombol */
+.stButton>button:hover {
+
+    background: linear-gradient(
+        to right,
+        #7c3aed,
+        #6d28d9
+    );
+
+    transform: scale(1.03);
+}
+
+/* Input box */
+.stNumberInput input {
+
+    background-color: #faf5ff;
+
+    color: #4c1d95;
+
+    border-radius: 12px;
+
+    border: 2px solid #a78bfa;
+
+    font-size: 17px;
+}
+
+/* Selectbox */
+div[data-baseweb="select"] {
+
+    border-radius: 10px !important;
+
+    border: 2px solid #8b5cf6 !important;
+
+    background-color: #ffffff !important;
+
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Metric box */
+[data-testid="metric-container"] {
+
+    background-color: #ede9fe;
+
+    border-radius: 20px;
+
+    padding: 15px;
+
+    border: 2px solid #a78bfa;
+
+    box-shadow: 0 0 15px rgba(139,92,246,0.3);
+}
+
+/* Container spacing */
+.block-container {
+
+    padding-top: 2rem;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+
+    width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+
+    background: #8b5cf6;
+
+    border-radius: 10px;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown("""
+<h1 style='
+text-align:center;
+color:#2e1065;
+font-size:60px;
+font-weight:700;
+text-shadow:none;
+margin-bottom:10px;
+'>
+📈 ACTUARIA FINANCIAL SYSTEM
+</h1>
+""", unsafe_allow_html=True)
+
+st.info(
+    "✨ Selamat datang di aplikasi "
+    "Matematika Keuangan & Aktuaria Modern ✨"
+)
+
+st.write("Aplikasi Matematika Keuangan & Aktuaria")
+
+# =====================================================
+# SIDEBAR MENU
+# =====================================================
+
+menu = st.sidebar.selectbox(
+    "📚 Pilih Menu",
+    [
+        "Bunga Sederhana",
+        "Bunga Majemuk",
+        "Present Value",
+        "Future Value",
+        "Bunga Efektif",
+        "Compound m-kali",
+        "Grafik Investasi",
+        "NPV",
+        "Amortisasi"
+    ]
+)
+
+# =====================================================
+# BUNGA SEDERHANA
+# =====================================================
+
+if menu == "Bunga Sederhana":
+
+    st.header("💸 Bunga Sederhana")
+
+    P = st.number_input(
+        "Pokok Modal",
+        min_value=0.0
+    )
+
+    i = st.number_input(
+        "Bunga (%)",
+        min_value=0.0
+    )
+
+    t = st.number_input(
+        "Waktu (tahun)",
+        min_value=0.0
+    )
+
+    if st.button("HITUNG"):
+
+        hasil = P * (1 + (i / 100) * t)
+
+        bunga = hasil - P
+
+        st.success(f"Bunga = Rp{bunga:,.2f}")
+
+        st.success(f"Jumlah Akhir = Rp{hasil:,.2f}")
+
+# =====================================================
+# BUNGA MAJEMUK
+# =====================================================
+
+elif menu == "Bunga Majemuk":
+
+    st.header("💸 Bunga Majemuk")
+
+    P = st.number_input("Pokok Modal")
+
+    i = st.number_input("Bunga (%)")
+
+    n = st.number_input("Jumlah Periode")
+
+    if st.button("HITUNG"):
+
+        hasil = P * (1 + i / 100) ** n
+
+        st.success(f"Jumlah Akhir = Rp{hasil:,.2f}")
+
+# =====================================================
+# PRESENT VALUE
+# =====================================================
+
+elif menu == "Present Value":
+
+    st.header("💰 Present Value")
+
+    FV = st.number_input("Future Value")
+
+    i = st.number_input("Bunga (%)")
+
+    n = st.number_input("Periode")
+
+    if st.button("HITUNG"):
+
+        PV = FV / (1 + i / 100) ** n
+
+        st.success(f"Present Value = Rp{PV:,.2f}")
+
+# =====================================================
+# FUTURE VALUE
+# =====================================================
+
+elif menu == "Future Value":
+
+    st.header("💰 Future Value")
+
+    PV = st.number_input("Present Value")
+
+    i = st.number_input("Bunga (%)")
+
+    n = st.number_input("Periode")
+
+    if st.button("HITUNG"):
+
+        FV = PV * (1 + i / 100) ** n
+
+        st.success(f"Future Value = Rp{FV:,.2f}")
+
+# =====================================================
+# BUNGA EFEKTIF
+# =====================================================
+
+elif menu == "Bunga Efektif":
+
+    st.header("💸 Bunga Efektif")
+
+    nominal = st.number_input("Bunga Nominal (%)")
+
+    m = st.number_input("Frekuensi m")
+
+    if st.button("HITUNG"):
+
+        efektif = (1 + (nominal / 100) / m) ** m - 1
+
+        st.success(f"Bunga Efektif = {efektif*100:.4f}%")
+
+# =====================================================
+# COMPOUND m-KALI
+# =====================================================
+
+elif menu == "Compound m-kali":
+
+    st.header("📈 Compound m-kali")
+
+    P = st.number_input("Pokok Modal")
+
+    nominal = st.number_input("Bunga Nominal (%)")
+
+    m = st.number_input("Frekuensi m")
+
+    t = st.number_input("Waktu")
+
+    if st.button("HITUNG"):
+
+        hasil = P * (1 + (nominal / 100) / m) ** (m * t)
+
+        st.success(f"Jumlah Akhir = Rp{hasil:,.2f}")
+
+# =====================================================
+# GRAFIK INVESTASI
+# =====================================================
+
+elif menu == "Grafik Investasi":
+
+    st.header("📊 Grafik Investasi")
+
+    P = st.number_input("Modal Awal")
+
+    i = st.number_input("Bunga (%)")
+
+    n = st.number_input("Periode")
+
+    if st.button("TAMPILKAN GRAFIK"):
+
+        tahun = []
+        saldo = []
+
+        for t in range(int(n) + 1):
+
+            tahun.append(t)
+
+            saldo.append(P * (1 + i / 100) ** t)
+
+        fig, ax = plt.subplots()
+
+        ax.plot(tahun, saldo, marker="o")
+
+        ax.set_title("Grafik Investasi")
+
+        ax.set_xlabel("Periode")
+
+        ax.set_ylabel("Saldo")
+
+        st.pyplot(fig)
+
+# =====================================================
+# NPV
+# =====================================================
+
+elif menu == "NPV":
+
+    st.header("📊 NPV")
+
+    investasi = st.number_input(
+        "Investasi Awal",
+        min_value=0.0
+    )
+
+    bunga = st.number_input(
+        "Discount Rate (%)",
+        min_value=0.0
+    )
+
+    n = st.number_input(
+        "Jumlah Tahun",
+        min_value=1,
+        step=1
+    )
+
+    cashflows = []
+
+    for t in range(int(n)):
+        cf = st.number_input(
+            f"Cashflow Tahun {t+1}",
+            value=0.0,
+            key=f"cf{t}"
+        )
+        cashflows.append(cf)
+
+    if st.button("Hitung NPV"):
+
+        npv = -investasi
+
+        for t, cf in enumerate(cashflows, start=1):
+            npv += cf / ((1 + bunga/100) ** t)
+
+        st.success(f"NPV = Rp {npv:,.2f}")
+# =====================================================
+# AMORTISASI
+# =====================================================
+
+elif menu == "Amortisasi":
+
+    st.header("🏦 Tabel Amortisasi")
+
+    pinjaman = st.number_input("Jumlah Pinjaman")
+
+    i = st.number_input("Bunga (%)")
+
+    n = st.number_input("Periode")
+
+    if st.button("HITUNG"):
+
+        bunga = i / 100
+
+        a = (1 - (1 + bunga) ** (-n)) / bunga
+
+        angsuran = pinjaman / a
+
+        saldo = pinjaman
+
+        data = []
+
+        for periode in range(1, int(n) + 1):
+
+            bunga_bayar = saldo * bunga
+
+            pokok = angsuran - bunga_bayar
+
+            saldo -= pokok
+
+            data.append([
+                periode,
+                round(angsuran, 2),
+                round(bunga_bayar, 2),
+                round(pokok, 2),
+                round(saldo, 2)
+            ])
+
+        df = pd.DataFrame(
+            data,
+            columns=[
+                "Periode",
+                "Angsuran",
+                "Bunga",
+                "Pokok",
+                "Sisa Hutang"
+            ]
+        )
+
+        st.dataframe(df)
+
+st.markdown("""
+---
+<center>
+by. Sutria Fairuzia Putri
+</center>
+""", unsafe_allow_html=True)
